@@ -1,6 +1,6 @@
 {
   "name": "contract-bridge",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Contract Bridge scoring, movements, dealer and statistics.",
   "main": "index.js",
   "repository": "https://github.com/jfklorenz/Bridge-Package.git",
@@ -27,6 +27,5 @@
   "scripts": {
     "test": "jest"
   },
-  "dependencies": {},
-  "publishConfig": { "registry": "https://npm.pkg.github.com/jfklorenz" }
+  "dependencies": {}
 }
