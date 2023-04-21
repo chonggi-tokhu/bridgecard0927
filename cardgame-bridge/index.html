@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var bridge = require('./node_modules/bridge.js');
+        expect(new Auction(seat.north).bids).to.be.a('array');
+        var auction = new Auction(seat.south);
+        auction.bid(['-', 'Pass', '1NT', 'X', '-', '-', '-']);
+        expect(auction.toString()).equal('- - 1NT X - - -');
+        var auction = new Auction(seat.south, '');
+        expect(auction.bids.length).equal(0);
+        auction = new Auction(seat.south, '  Pass -    1NT     X     -    -    -      ');
+        expect(auction.bids.length).equal(7);
+        expect(auction.toString()).equal('- - 1NT X - - -');
+        var auction = new Auction(seat.south);
+        auction.bid('1C', 'X', '-', '-', '1S');
+        expect(auction.contract().toString()).equal('1S by S');
+        var auction = new Auction(seat.south);
+        auction.bid('1C', 'X', '1S');
+        expect(auction.contract().toString()).equal('1S by N');
+        var auction = new Auction(seat.south);
+        auction.bid(['1C', '-', '-', 'X']);
+        expect(auction.bids.length).equal(4);
+        var auction = new Auction(seat.south);
+        auction.bid(['1C', 'X']);
+        expect(auction.bids.length).equal(2);
+        var auction = new Auction(seat.south);
+        expect(function () { auction.bid(['1C', '-', 'X']); }).to.throw('Doubling your partner is not allowed');
+        var auction = new Auction(seat.south);
+        expect(function () { auction.bid(['1C', 'X', '-', 'X']); }).to.throw('Opposition is already at risk');
+        var auction = new Auction(seat.south);
+        expect(auction.nextSeatToBid()).to.equal(seat.south);
+        var auction = new Auction(seat.south);
+        auction.bid('1C', '1S', '-', '-', '-');
+        expect(auction.nextSeatToBid()).to.equal(null);
+        var auction = new Auction(seat.south);
+        auction.bid('1C', '1S', '-', '-', 'X');
+        expect(auction.nextSeatToBid()).to.equal(seat.west);
+        var bid = bridge.bid['X'];
+        expect(bid.isDouble).equal(true);
+        var bid = bridge.bid['-'];
+        expect(bid.isPass).equal(true);
+        var bid = bridge.bid['1NT'];
+        expect(bid.level).to.equal(1);
+        expect(bid.denomination).to.equal('NT');
+        bid = bridge.bid['7S'];
+        expect(bid.level).to.equal(7);
+        expect(bid.denomination).to.equal('S');
+        var club = bridge.bid['1C'];
+        var diamond = bridge.bid['1D'];
+        var heart = bridge.bid['1H'];
+        var spade = bridge.bid['1S'];
+        var notrump = bridge.bid['1NT'];
+        expect(club.order).below(diamond.order);
+        expect(diamond.order).below(heart.order);
+        expect(heart.order).below(spade.order);
+        expect(spade.order).below(notrump.order);
+        expect(bridge.bid['1C'].isRed).equal(false);
+        expect(bridge.bid['1D'].isRed).equal(true);
+        expect(bridge.bid['1H'].isRed).equal(true);
+        expect(bridge.bid['1S'].isRed).equal(false);
+        expect(bridge.bid['1C'].order).below(bridge.bid['2C'].order);
+        expect(bridge.bid['2C'].order).below(bridge.bid['3C'].order);
+        expect(bridge.bid['3C'].order).below(bridge.bid['4C'].order);
+        expect(bridge.bid['4C'].order).below(bridge.bid['5C'].order);
+        expect(bridge.bid['5C'].order).below(bridge.bid['6C'].order);
+        expect(bridge.bid['6C'].order).below(bridge.bid['7C'].order);
+        expect(bridge.bid['3D'].toString()).to.equal('3D');
+        expect(bridge.bid.pass.toString()).to.equal('-');
+        expect(bridge.bid.double.toString()).to.equal('X');
+        expect(bridge.bid.redouble.toString()).to.equal('XX');
+        expect(bridge.bid['7NT'].order).to.equal(35);
+        expect(bridge.bid['1C'].order).to.equal(1);
+        var card = bridge.card['2S'];
+        expect(card.rank).to.equal('2');
+        expect(card.suit).to.equal('S');
+        var card = bridge.card['2S'];
+        expect(card.toString()).to.equal('2S');
+        var card = bridge.card['10S'];
+        expect(card.rank).to.equal('T');
+        expect(card.suit).to.equal('S');
+        card = bridge.card['TS'];
+        expect(card.rank).to.equal('T');
+        expect(card.suit).to.equal('S');
+        var club = bridge.card['AC'];
+        var diamond = bridge.card['AD'];
+        var heart = bridge.card['AH'];
+        var spade = bridge.card['AS'];
+        expect(club.order).below(diamond.order);
+        expect(diamond.order).below(heart.order);
+        expect(heart.order).below(spade.order);
+        var card = bridge.card['2S'];
+        expect(card.toString()).to.equal('2S');
+        var S2 = bridge.card['2S'];
+        var S3 = bridge.card['3S'];
+        var S4 = bridge.card['4S'];
+        var S5 = bridge.card['5S'];
+        var S6 = bridge.card['6S'];
+        var S7 = bridge.card['7S'];
+        var S8 = bridge.card['8S'];
+        var S9 = bridge.card['9S'];
+        var ST = bridge.card['TS'];
+        var SJ = bridge.card['JS'];
+        var SQ = bridge.card['QS'];
+        var SK = bridge.card['KS'];
+        var SA = bridge.card['AS'];
+        expect(S2.order).below(S3.order);
+        expect(S3.order).below(S4.order);
+        expect(S4.order).below(S5.order);
+        expect(S5.order).below(S6.order);
+        expect(S6.order).below(S7.order);
+        expect(S7.order).below(S8.order);
+        expect(S8.order).below(S9.order);
+        expect(S9.order).below(ST.order);
+        expect(ST.order).below(SJ.order);
+        expect(SJ.order).below(SQ.order);
+        expect(SQ.order).below(SK.order);
+        expect(SK.order).below(SA.order);
+        var C2 = bridge.card['2C'];
+        expect(C2.order).to.equal(1);
+        var AS = bridge.card['AS'];
+        expect(AS.order).to.equal(52);
+        bridge.card.imagePath('foobar/');
+        expect(bridge.card.AS.imageUrl()).to.contain('foobar/AS.svg');
+        var contract = new bridge.Contract();
+        expect(contract.toString()).to.equal('-');
+        expect(contract.level).to.equal(0);
+        expect(contract.isPassedIn()).to.equal(true);
+        var contract = new bridge.Contract();
+        contract.level = 3;
+        contract.denomination = 'NT';
+        contract.declaror = bridge.seat.south;
+        contract.risk = 'X';
+        expect(contract.toString()).to.equal('3NTX by S');
+        expect(contract.isPassedIn()).to.equal(false);
+        var contract = new bridge.Contract();
+        contract.level = 3;
+        contract.denomination = 'NT';
+        contract.declaror = bridge.seat.south;
+        contract.risk = 'X';
+        expect(contract.dummy()).to.equal(bridge.seat.north);
+        var contract = new bridge.Contract();
+        expect(contract.dummy()).to.equal(undefined);
+        var contract = new bridge.Contract();
+        contract.level = 3;
+        contract.denomination = 'NT';
+        contract.declaror = bridge.seat.south;
+        contract.risk = 'X';
+        expect(contract.leader()).to.equal(bridge.seat.west);
+        var contract = new bridge.Contract();
+        expect(contract.leader()).to.equal(undefined);
+        var contract = new bridge.Contract();
+        contract.level = 3;
+        contract.denomination = 'NT';
+        contract.declaror = bridge.seat.south;
+        contract.risk = 'X';
+        expect(contract.isOpponent(bridge.seat.north)).to.equal(false);
+        expect(contract.isOpponent(bridge.seat.south)).to.equal(false);
+        expect(contract.isOpponent(bridge.seat.east)).to.equal(true);
+        expect(contract.isOpponent(bridge.seat.west)).to.equal(true);
+        var deal = pbn.importDeal('E:KQ9752.K74.8742. T.A93.QT93.KJ873 J6.T852.AJ65.QT9 A843.QJ6.K.A6542');
+        expect(deal[seat.north].toPBN()).to.equal('A843.QJ6.K.A6542');
+        expect(deal[seat.south].toPBN()).to.equal('T.A93.QT93.KJ873');
+        expect(deal[seat.east].toPBN()).to.equal('KQ9752.K74.8742.');
+        expect(deal[seat.west].toPBN()).to.equal('J6.T852.AJ65.QT9');
+        var deal = {};
+        deal[seat.north] = Hand.parsePBN('A843.QJ6.K.A6542');
+        deal[seat.east] = Hand.parsePBN('KQ9752.K74.8742.');
+        deal[seat.south] = Hand.parsePBN('T.A93.QT93.KJ873');
+        deal[seat.west] = Hand.parsePBN('J6.T852.AJ65.QT9');
+        var s = pbn.exportDeal(deal, seat.east);
+        expect(s).to.equal("E:KQ9752.K74.8742. T.A93.QT93.KJ873 J6.T852.AJ65.QT9 A843.QJ6.K.A6542");
+        var hand = new bridge.Deck().shuffle().deal(seat.west);
+        expect(hand[seat.north].cards.length).to.equal(13);
+        expect(hand[seat.south].cards.length).to.equal(13);
+        expect(hand[seat.east].cards.length).to.equal(13);
+        expect(hand[seat.west].cards.length).to.equal(13);
+        var session = new Session();
+        expect(session).to.have.property('competition')
+            .that.is.instanceof(Competition);
+        var session = new Session();
+        expect(session).to.have.property('site')
+            .that.is.a('string');
+        var session = new Session();
+        expect(session).to.have.property('date')
+            .that.is.a('string');
+        var session = new Session();
+        expect(session).to.have.property('boards')
+            .that.is.instanceof(Array);
+        var session = new Session();
+        expect(session).to.have.property('games')
+            .that.is.instanceof(Array);
+        var session = Session.generateBoards(16);
+        expect(session)
+            .to.have.property('boards')
+            .that.has.length(16);
+        for (var i = 0; i < 16; ++i) {
+            var board = session.boards[i];
+            expect(board.hands).has.property(seat.north).and.instanceOf(Hand).and.has.property('cards').and.has.lengthOf(13);
+            expect(board.hands).has.property(seat.south).and.instanceOf(Hand).and.has.property('cards').and.has.lengthOf(13);
+            expect(board.hands).has.property(seat.east).and.instanceOf(Hand).and.has.property('cards').and.has.lengthOf(13);
+            expect(board.hands).has.property(seat.west).and.instanceOf(Hand).and.has.property('cards').and.has.lengthOf(13);
+        }
+
+
+
+
+    </script>
+</body>
+
+</html>
